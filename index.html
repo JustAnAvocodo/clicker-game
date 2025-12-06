@@ -3,12 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/1Click/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <script src="script.js" defer></script>
+    <script src="/script.js" defer></script>
     <title>1Click | Typhoon Clicker Game</title>
 </head>
 <body>
+    <div class="top-bar">
+    <div id="user-info">Not logged in</div>
+    <button id="btn-login-modal">Login / Signup</button>
+    <button id="btn-leaderboard">🏆 Leaderboard</button>
+</div>
+
     <h1><span class="one">1</span>Click</h1>
     <button id="ach-toggle" class="ach-toggle" title="Open Achievements">Achievements</button>
     <main>
@@ -82,6 +88,29 @@
         </div>
     </div>
 </div>
+<!-- Login Modal -->
+<div id="modal-login" class="modal hide">
+    <div class="modal-content">
+        <span class="close-modal" data-target="modal-login">&times;</span>
+        <h2>Login</h2>
+        <input type="text" id="inp-username" placeholder="Username">
+        <input type="password" id="inp-password" placeholder="Password">
+        <div class="modal-actions">
+            <button onclick="doLogin()">Login</button>
+            <button onclick="doSignup()">Sign Up</button>
+        </div>
+        <p id="auth-msg"></p>
+    </div>
+</div>
 
+<!-- Leaderboard Modal -->
+<div id="modal-leaderboard" class="modal hide">
+    <div class="modal-content">
+        <span class="close-modal" data-target="modal-leaderboard">&times;</span>
+        <h2>🏆 Top 10 Players</h2>
+        <ul id="leaderboard-list">Loading...</ul>
+        <button onclick="loadLeaderboardData()">Refresh</button>
+    </div>
+</div>
 </body>
 </html>
