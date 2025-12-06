@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="script.js" defer></script>
+    <title>1Click | Typhoon Clicker Game</title>
+</head>
+<body>
+    <h1><span class="one">1</span>Click</h1>
+    <button id="ach-toggle" class="ach-toggle" title="Open Achievements">Achievements</button>
+    <main>
+    <div class="flexbox">
+    <button id="clicker">Click me</button>
+    <button id="reset">Reset</button>
+    </div>
+    <div>
+    <p class="points">Points: <span id="click-count">0</span></p>
+    <p>PPS: <span id="cps">0</span></p>
+    </div>
+    <div id="stats-bar" class="stats-bar">
+        <div class="stats-item">Multiplier: <span id="stat-mult">×1.00</span></div>
+        <div class="stats-item">HC: <span id="stat-hc">0</span></div>
+        <div class="stats-item">CC: <span id="stat-cc">0</span></div>
+        <div class="stats-item">HP: <span id="stat-hp">0</span></div>
+        <div class="stats-item">CP: <span id="stat-cp">0</span></div>
+        <div class="stats-item">HCPS: <span id="stat-hcps">0</span></div>
+        <div class="stats-item">HPPS: <span id="stat-hpps">0</span></div>
+        <div class="stats-item">CCPS: <span id="stat-ccps">0</span></div>
+        <div class="stats-item">CPPS: <span id="stat-cpps">0</span></div>
+    </div>
+    <div class="upgrades">
+        Upgrades
+        <button class="upgrade autoclicker-1 hide">Autoclicker 1: 1cps (50 Pts)</button>
+        <button class="upgrade autoclicker-10 hide">Autoclicker 10: 10cps (600 Pts)</button>
+        <button class="upgrade autoclicker-100 hide">Autoclicker 100: 100cps (10000 Pts)</button>
+        <button class="upgrade multiplier-2 hide">Multiplier 2: ×2.50 (6000 Pts)</button>
+        <button class="upgrade multiplier-1 hide">Multiplier 1: × 2 (100 Pts)</button>   
+    </div>
+</main>
+
+    <button id="dev-toggle" class="dev-toggle" title="Toggle developer menu">Dev</button>
+    <div id="dev-panel" class="dev-panel hide" aria-hidden="true">
+        <h3>Developer Menu</h3>
+        <div class="dev-row"><label>Human Clicks (HC): <input id="dev-hc" type="number" min="0"></label></div>
+        <div class="dev-row"><label>Points: <input id="dev-points" type="number" min="0"></label></div>
+        <div class="dev-row"><label>Computer Points (CP): <input id="dev-cp" type="number" min="0"></label></div>
+        <div class="dev-row">Upgrades:</div>
+        <div class="dev-row"><label>Autoclicker 1: <input id="dev-up-auto1" type="number" min="0"></label></div>
+        <div class="dev-row"><label>Autoclicker 10: <input id="dev-up-auto10" type="number" min="0"></label></div>
+        <div class="dev-row"><label>Multiplier 1 (0/1): <input id="dev-up-mult1" type="number" min="0" max="1"></label></div>
+        <div class="dev-row"><label>Multiplier 2 (0/1): <input id="dev-up-mult2" type="number" min="0" max="1"></label></div>
+        <div class="dev-row"><label><input id="dev-milestone" type="checkbox"> Award HC milestone (×1.50)</label></div>
+        <div class="dev-actions">
+            <button id="dev-apply">Apply</button>
+            <button id="dev-close">Close</button>
+        </div>
+    </div>
+
+<!-- Achievement popup template inserted at end of body -->
+<div id="ach-popup" class="ach-popup hide" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="ach-popup-inner">
+        <h2>Achievement</h2>
+        <p id="ach-popup-title">You reached 1000 (human) clicks</p>
+        <p id="ach-popup-desc">Reward: ×1.50 multiplier</p>
+        <div class="ach-popup-actions">
+            <button id="ach-popup-close">Close</button>
+            <button id="ach-popup-view">View Achievements</button>
+        </div>
+    </div>
+</div>
+
+<div id="ach-panel" class="ach-panel hide" aria-hidden="true">
+    <div class="ach-card">
+        <h3>Achievements</h3>
+        <ul id="ach-list" class="ach-list"></ul>
+        <div class="ach-actions">
+            <button id="ach-clear">Clear Achievements</button>
+            <button id="ach-close">Close</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

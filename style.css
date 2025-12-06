@@ -1,0 +1,243 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+}
+
+main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    flex-direction: column;
+    margin-top: 1.6rem;
+}
+
+.flexbox {
+    display: flex;
+    gap: 1rem;
+}
+
+.upgrades {
+    font-size: 1.2rem;
+    color: #555;
+    background: #e0e0e0;
+    padding: 0.5rem;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: max-content;
+    justify-content: center;
+}
+
+.upgrades button {
+    margin: 0.5rem 0;
+}
+
+button {
+    background: #333;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    border: 2px solid #333;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background-color: #555;
+    border-color: #555;
+}
+
+button#clicker {
+    background: none;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    border: 2px solid #333;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #333;
+}
+
+button#clicker:hover {
+    background-color: #333;
+    color: white;
+    border-color: #333;
+}
+
+button#reset {
+    background: #333;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    border: 2px solid #333;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button#reset:hover {
+    background-color: #e00;
+    color: white;
+    border-color: #e00;
+}
+
+h1 {
+    text-align: center;
+    font-size: 5rem;
+    margin-top: 9rem;
+}
+
+.one {
+    color: blueviolet;
+}
+
+.hide {
+    display: none;
+}
+
+.disabled {
+    background: #aaa;
+    border-color: #aaa;
+    cursor: not-allowed;
+}
+
+.upgrade {
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+    background: #333;
+    border: 2px solid #333;
+    color: white;
+}
+
+.upgrade.disabled,
+.upgrade[disabled] {
+    background: #aaa !important;
+    border-color: #888 !important;
+    cursor: not-allowed !important;
+    opacity: 0.9;
+}
+
+.fade-out {
+    opacity: 0.4;
+    transform: scale(0.98);
+}
+
+.points {
+    margin-bottom: 0.7rem;
+}
+
+.hidden-after-buy {
+    pointer-events: none;
+}
+
+/* Stats bar (top-left) */
+.stats-bar {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    left: auto;
+    background: rgba(255,255,255,0.95);
+    color: #222;
+    padding: 0.5rem 0.6rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+    z-index: 1200;
+    font-weight: 600;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 0.6rem 1rem;
+    align-items: center;
+}
+.stats-bar .stats-item { font-size: 0.9rem; white-space: nowrap; }
+.stats-bar span { font-weight: 800; margin-left: 0.25rem; }
+
+/* Developer menu */
+.dev-toggle {
+    position: fixed;
+    left: 1rem;
+    bottom: 1rem;
+    z-index: 1300;
+    background: linear-gradient(180deg,#111,#333);
+    color: #fff;
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.06);
+    cursor: pointer;
+    font-weight: 700;
+    letter-spacing: .6px;
+}
+
+.dev-panel {
+    position: fixed;
+    left: 1rem;
+    bottom: 3.6rem;
+    z-index: 1300;
+    background: linear-gradient(180deg, rgba(255,255,255,0.98), #fbfbfb);
+    color: #111;
+    padding: 0.5rem;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+    width: 320px;
+    border-left: 4px solid #6b5cff;
+    overflow: hidden;
+}
+.dev-panel h3 { margin: 0 0 0.4rem 0; font-size: 1rem; background: linear-gradient(90deg,#6b5cff,#3aa0ff); color: #fff; padding: 0.5rem 0.75rem; border-radius: 6px; font-weight: 800; }
+.dev-panel .dev-body { padding: 0.6rem 0.4rem 0.4rem 0.4rem; }
+.dev-row { margin: 0.25rem 0; font-size: 0.95rem; display: grid; grid-template-columns: 1fr auto; gap: 0.5rem; align-items: center; }
+.dev-row label { display:flex; align-items:center; gap:0.4rem; }
+.dev-row input[type="number"] { width: 86px; padding: 0.28rem 0.4rem; border-radius: 6px; border: 1px solid #ddd; background: #fff; font-family: monospace; }
+.dev-row input[type="checkbox"] { transform: scale(1.05); }
+.dev-actions { display:flex; gap:0.5rem; margin-top:0.6rem; justify-content: flex-end; }
+.dev-actions button { padding: 0.4rem 0.6rem; border-radius: 6px; border: none; background: #6b5cff; color: #fff; cursor: pointer; }
+.dev-actions button#dev-close { background: #ddd; color: #222; }
+.dev-panel.hide { display: none; }
+
+/* Achievements UI */
+.ach-toggle {
+    position: fixed;
+    left: 5.8rem;
+    bottom: 1rem;
+    z-index: 1300;
+    background: #0a6;
+    color: #fff;
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    border: 2px solid #0a6;
+    cursor: pointer;
+}
+.ach-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 1400;
+    display: grid;
+    place-items: center;
+    background: rgba(0,0,0,0.35);
+}
+.ach-panel.hide { display:none; }
+.ach-panel .ach-card {
+    background: rgba(255,255,255,0.98);
+    color: #111;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.22);
+    min-width: 320px;
+    max-width: 92vw;
+}
+.ach-list { list-style: none; padding: 0; margin: 0; max-height: 240px; overflow: auto; }
+.ach-list li { padding: 0.6rem; border-bottom: 1px solid #eee; font-size: 0.95rem; display:flex; flex-direction:column; gap:0.15rem; align-items:center; text-align:center; }
+.ach-list .ach-title { font-weight: 700; font-size: 0.98rem; }
+.ach-list .ach-desc { font-size: 0.85rem; color: #444; }
+.ach-list .ach-ts { font-size: 0.75rem; color: #888; }
+.ach-actions { display:flex; gap:0.5rem; margin-top:0.6rem; justify-content:center; }
+.ach-popup { position: fixed; inset: 0; display: grid; place-items: center; z-index: 2000; }
+.ach-popup.hide { display: none; }
+.ach-popup-inner { background: #fff; padding: 1rem 1.2rem; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); width: 320px; text-align:center; }
+.ach-popup-inner h2 { margin-bottom: 0.4rem; }
+.ach-popup-actions { display:flex; gap:0.5rem; justify-content:center; margin-top:0.8rem; }
+.ach-popup button { padding: 0.4rem 0.6rem; border-radius:6px; cursor:pointer; }
