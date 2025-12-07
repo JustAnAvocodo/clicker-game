@@ -14,6 +14,6 @@ exports.handler = async (event) => {
     );
     return { statusCode: 200, body: JSON.stringify(result.rows[0]) };
   } catch (error) {
-    return { statusCode: 500, body: JSON.stringify({ error: "Username already exists or error occurred" }) };
+    return { statusCode: 500, body: JSON.stringify({ error: "Username taken or error" }) };
   } finally { await client.end(); }
 };
