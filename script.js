@@ -955,3 +955,111 @@ restoreAutoclicker();
 // initial stats render and start human tick
 try { updateStatsUI(); } catch(e) {}
 startHumanTick();
+
+/* =========================================
+   LOGIN & LEADERBOARD SYSTEM
+   ========================================= */
+
+let currentUser = null; // Stores {id, username}
+
+// UI Elements
+const modalLogin = document.getElementById('modal-login');
+const modalLeaderboard = document.getElementById('modal-leaderboard');
+const authMsg = document.getElementById('auth-msg');
+const userInfoDisplay = document.getElementById('user-info');
+const leaderboardList = document.getElementById('leaderboard-list');
+
+// Open/Close logic
+document.getElementById('btn-login-modal').addEventListener('click', () => {
+    modalLogin.classList.remove('hide');
+});
+document.getElementById('btn-leaderboard').addEventListener('click', () => {
+    modalLeaderboard.classList.remove('hide');
+    loadLeaderboardData();
+});
+
+document.querySelectorAll('.close-modal').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        document.getElementById(e.target.dataset.target).classList.add('hide');
+    });
+});
+
+// --- API FUNCTIONS ---
+
+async function doSignup() {
+    const user = document.getElementById('inp-username').value;
+    const pass = document.getElementById('inp-password').value;
+    if(!user || !pass) return authMsg.innerText = "Fill all fields";
+    
+    authMsg.innerText = "Signing up...";
+    
+    try {
+        const res = await fetch('/.netlify/functions/auth-signup', {
+            method: 'POST', body: JSON.stringify({ username: user, password: pass })
+        });
+        const data = await res.json();
+        if(res.ok) {
+            authMsg.innerText = "Account created! Logging in...";
+            doLogin(); // Auto login after signup
+        } else {
+            authMsg.innerText = "Error: " + (data.error || "Failed");
+        }
+    } catch(e) { authMsg.innerText = "Network Error"; }
+}
+
+async function doLogin() {
+    const user = document.getElementById('inp-username').value;
+    const pass = document.getElementById('inp-password').value;
+    
+    authMsg.innerText = "Logging in...";
+
+    try {
+        const res = await fetch('/.netlify/functions/auth-login', {
+            method: 'POST', body: JSON.stringify({ username: user, password: pass })
+        });
+        const data = await res.json();
+        
+        if(res.ok) {
+            currentUser = data; // Save user session
+            userInfoDisplay.innerText = `Player: ${data.username}`;
+            document.getElementById('btn-login-modal').style.display = 'none';
+            modalLogin.classList.add('hide');
+            alert(`Welcome back, ${data.username}!`);
+        } else {
+            authMsg.innerText = "Error: " + (data.error || "Failed");
+        }
+    } catch(e) { authMsg.innerText = "Network Error"; }
+}
+
+async function loadLeaderboardData() {
+    leaderboardList.innerHTML = "Loading...";
+    try {
+        const res = await fetch('/.netlify/functions/get-leaderboard');
+        const data = await res.json();
+        
+        leaderboardList.innerHTML = "";
+        data.forEach((entry, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `<span>#${index+1} ${entry.username}</span> <span>${entry.score} pts</span>`;
+            leaderboardList.appendChild(li);
+        });
+    } catch(e) {
+        leaderboardList.innerHTML = "Failed to load.";
+    }
+}
+
+async function saveScoreToCloud() {
+    if(!currentUser) return; // Don't save if not logged in
+    
+    // We use the 'count' variable from your existing game code
+    console.log("Auto-saving score to cloud...");
+    
+    await fetch('/.netlify/functions/submit-score', {
+        method: 'POST', 
+        body: JSON.stringify({ userId: currentUser.id, score: count })
+    });
+}
+
+// --- AUTOSAVE LOOP ---
+// Save score to database every 30 seconds if logged in
+setInterval(saveScoreToCloud, 30000);
