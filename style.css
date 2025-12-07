@@ -372,4 +372,17 @@ html, body, * , *::before, *::after {
         font-size: 12px;
         font-weight: 400 !important;
     }
+
+}
+
+/* Force Cloud Controls to ALWAYS show */
+#cloud-controls {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Make sure the buttons inside aren't hidden either */
+#cloud-controls button {
+    display: inline-block !important;
 }
