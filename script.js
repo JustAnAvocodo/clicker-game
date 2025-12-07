@@ -643,7 +643,9 @@ async function doLogin() {
 async function loadLeaderboardData() {
     leaderboardList.innerHTML = "<li style='text-align:center;'>Loading...</li>";
     try {
-        const res = await fetch('/.netlify/functions/get-leaderboard');
+        // Add ?t=Date.now() to the end of the URL
+// This forces the browser to think it's a "new" website every time
+const res = await fetch('/.netlify/functions/get-leaderboard?t=' + Date.now());
         const data = await res.json();
         leaderboardList.innerHTML = "";
         if(data.length === 0) { leaderboardList.innerHTML = "<li>No scores yet!</li>"; return; }
@@ -755,5 +757,6 @@ function __screenClickToManual(e){
         handleManualClick();
     } catch (err) { /* defensive: don't break page */ }
 }
+
 
 document.addEventListener('click', __screenClickToManual);
