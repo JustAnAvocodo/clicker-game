@@ -366,3 +366,10 @@ a {
 html, body, * , *::before, *::after {
     font-weight: 500 !important;
 }
+
+@media (max-width: 420px) {
+    * {
+        font-size: 12px;
+        font-weight: 400 !important;
+    }
+}
