@@ -489,11 +489,68 @@ function updateUI(){
 if (bc){ bc.onmessage = (ev) => { if (!ev || !ev.data) return; const d = ev.data; if (d.type === 'state'){ if (typeof d.count === 'number' && d.count !== count) { setCount(d.count); } const anyRemote = Object.keys(UPGRADES).some(id => typeof d[id] === 'number' && d[id] > 0); if (anyRemote && totalCPS() === 0) restoreAutoclicker(); if (typeof d.hcMilestone1000 === 'number'){ if (d.hcMilestone1000 === 1) setHcMilestoneAwarded(true); } if (typeof d.autoMilestone50000 === 'number'){ if (d.autoMilestone50000 === 1) setAutoMilestoneAwarded(true); } } }; }
 window.addEventListener('storage', (e) => { if (!e) return; if (e.key === KEY_COUNT) { const v = parseInt(e.newValue || '0', 10) || 0; if (v !== count) { count = v; clickCount.textContent = v; try { updateUI(); } catch (err) {} } } const upgradeKeys = Object.keys(UPGRADES).map(id => getUpgradeKey(id)); if (upgradeKeys.includes(e.key) || e.key === KEY_LAST_TICK) { if (totalCPS() > 0) startLocalInterval(); else stopLocalInterval(); try { updateUI(); } catch (err) {} } });
 
-// Dev Menu
-function populateDevPanel(){ if (!devPanel) return; try { if (devHc) devHc.value = String(humanClickCount || 0); if (devPoints) devPoints.value = String(count || 0); if (devCp) devCp.value = String(Math.floor(computerPointsTotal || 0)); if (devUpAuto1) devUpAuto1.value = String(getUpgradeCount('auto1') || 0); if (devUpAuto10) devUpAuto10.value = String(getUpgradeCount('auto10') || 0); if (devUpMult1) devUpMult1.value = String(getUpgradeCount('mult1') || 0); if (devUpMult2) devUpMult2.value = String(getUpgradeCount('mult2') || 0); if (devMilestone) devMilestone.checked = isHcMilestoneAwarded(); } catch(e){} }
-function openDevPanel(){ if (!devPanel) return; populateDevPanel(); devPanel.classList.remove('hide'); devPanel.setAttribute('aria-hidden','false'); }
-function closeDevPanel(){ if (!devPanel) return; devPanel.classList.add('hide'); devPanel.setAttribute('aria-hidden','true'); }
-function applyDevChanges(){ try { if (devHc) humanClickCount = Math.max(0, parseInt(devHc.value||'0',10)); if (devPoints) setCount(parseInt(devPoints.value||'0',10)); if (devCp) computerPointsTotal = Math.max(0, parseInt(devCp.value||'0',10)); if (devUpAuto1) setUpgradeCount('auto1', Math.max(0, parseInt(devUpAuto1.value||'0',10))); if (devUpAuto10) setUpgradeCount('auto10', Math.max(0, parseInt(devUpAuto10.value||'0',10))); if (devUpMult1) setUpgradeCount('mult1', Math.max(0, Math.min(1, parseInt(devUpMult1.value||'0',10)))); if (devUpMult2) setUpgradeCount('mult2', Math.max(0, Math.min(1, parseInt(devUpMult2.value||'0',10)))); if (devMilestone) setHcMilestoneAwarded(!!devMilestone.checked); if (totalCPS() > 0) startLocalInterval(); else stopLocalInterval(); updateUI(); updateStatsUI(); broadcastState(); awardHcMilestoneIfNeeded(); awardAutoMilestoneIfNeeded(); } catch(e){} }
+// Dev Menu (isolated from real game save using separate storage)
+const KEY_DEV_STATE = 'dev_menu_state_v1';
+let devState = {};
+
+function loadDevState() {
+    try {
+        const saved = localStorage.getItem(KEY_DEV_STATE);
+        devState = saved ? JSON.parse(saved) : { hc: 0, points: 0, cp: 0, auto1: 0, auto10: 0, mult1: 0, mult2: 0, milestone: false };
+    } catch (e) {
+        devState = {};
+    }
+}
+
+function saveDevState() {
+    try {
+        localStorage.setItem(KEY_DEV_STATE, JSON.stringify(devState));
+    } catch (e) {}
+}
+
+function populateDevPanel() {
+    if (!devPanel) return;
+    try {
+        if (devHc) devHc.value = String(devState.hc || 0);
+        if (devPoints) devPoints.value = String(devState.points || 0);
+        if (devCp) devCp.value = String(devState.cp || 0);
+        if (devUpAuto1) devUpAuto1.value = String(devState.auto1 || 0);
+        if (devUpAuto10) devUpAuto10.value = String(devState.auto10 || 0);
+        if (devUpMult1) devUpMult1.value = String(devState.mult1 || 0);
+        if (devUpMult2) devUpMult2.value = String(devState.mult2 || 0);
+        if (devMilestone) devMilestone.checked = !!devState.milestone;
+    } catch (e) {}
+}
+
+function openDevPanel() {
+    if (!devPanel) return;
+    loadDevState();
+    populateDevPanel();
+    devPanel.classList.remove('hide');
+    devPanel.setAttribute('aria-hidden', 'false');
+}
+
+function closeDevPanel() {
+    if (!devPanel) return;
+    devPanel.classList.add('hide');
+    devPanel.setAttribute('aria-hidden', 'true');
+}
+
+function applyDevChanges() {
+    try {
+        // Save dev state values to isolated storage (does not affect real game)
+        if (devHc) devState.hc = Math.max(0, parseInt(devHc.value || '0', 10));
+        if (devPoints) devState.points = Math.max(0, parseInt(devPoints.value || '0', 10));
+        if (devCp) devState.cp = Math.max(0, parseInt(devCp.value || '0', 10));
+        if (devUpAuto1) devState.auto1 = Math.max(0, parseInt(devUpAuto1.value || '0', 10));
+        if (devUpAuto10) devState.auto10 = Math.max(0, parseInt(devUpAuto10.value || '0', 10));
+        if (devUpMult1) devState.mult1 = Math.max(0, Math.min(1, parseInt(devUpMult1.value || '0', 10)));
+        if (devUpMult2) devState.mult2 = Math.max(0, Math.min(1, parseInt(devUpMult2.value || '0', 10)));
+        if (devMilestone) devState.milestone = !!devMilestone.checked;
+        saveDevState();
+        alert('Dev state saved (isolated from game save).');
+    } catch (e) {}
+}
 if (devToggleBtn) devToggleBtn.addEventListener('click', () => { if (devPanel && !devPanel.classList.contains('hide')) closeDevPanel(); else openDevPanel(); });
 if (devApplyBtn) devApplyBtn.addEventListener('click', () => { applyDevChanges(); });
 if (devCloseBtn) devCloseBtn.addEventListener('click', () => { closeDevPanel(); });
