@@ -508,6 +508,20 @@ updateUI();
 restoreAutoclicker();
 try { updateStatsUI(); } catch(e) {}
 startHumanTick();
+// Stats-bar hamburger toggle (shows/hides the stats panel)
+const statsToggleBtn = document.getElementById('btn-stats-toggle');
+const statsBarEl = document.getElementById('stats-bar');
+if (statsToggleBtn && statsBarEl) {
+    // use a 'collapsed' class so we don't interfere with global '.hide' usage
+    const isCollapsed = statsBarEl.classList.contains('collapsed');
+    statsToggleBtn.setAttribute('aria-expanded', (!isCollapsed).toString());
+    statsToggleBtn.addEventListener('click', () => {
+        // Toggle stats panel on all viewports (mobile and desktop behave the same)
+        const nowCollapsed = statsBarEl.classList.toggle('collapsed');
+        statsToggleBtn.setAttribute('aria-expanded', (!nowCollapsed).toString());
+    });
+    // ARIA is kept by the toggle itself; do not force state on resize so behavior is identical on PC and mobile
+}
 
 /* =========================================
    PERSISTENT LOGIN & CLOUD SAVE SYSTEM
@@ -626,3 +640,63 @@ async function manualLoad() {
         alert("Game Loaded! 🎉");
     } catch(e) { alert("Load failed."); }
 }
+
+// Collapse upgrades on click (mobile-friendly)
+(function(){
+    const upgradesContainer = document.querySelector('.upgrades');
+    // Always enable the Show Upgrades button so it appears next to Achievements on all viewports.
+    if (!upgradesContainer) return;
+    const upgradeButtons = Array.from(upgradesContainer.querySelectorAll('button.upgrade'));
+    // place the Show Upgrades button near the achievements control
+    const achToggle = document.getElementById('ach-toggle');
+
+    // create or reuse a show-upgrades button (only on mobile sizes)
+    let showUpgradesBtn = document.getElementById('btn-show-upgrades');
+    if (!showUpgradesBtn) {
+        showUpgradesBtn = document.createElement('button');
+        showUpgradesBtn.id = 'btn-show-upgrades';
+        // use the achievement button styling so it appears where achievements are
+        showUpgradesBtn.className = 'ach-toggle stats-toggle';
+        showUpgradesBtn.textContent = 'Show Upgrades';
+        showUpgradesBtn.setAttribute('aria-expanded','true');
+        // insert after the achievements toggle if possible, otherwise append to body
+        if (achToggle && achToggle.parentNode) achToggle.parentNode.insertBefore(showUpgradesBtn, achToggle.nextSibling);
+        else document.body.appendChild(showUpgradesBtn);
+    }
+
+    function collapseUpgrades(){
+        upgradesContainer.classList.add('collapsed');
+        showUpgradesBtn.setAttribute('aria-expanded','false');
+    }
+    function expandUpgrades(){
+        upgradesContainer.classList.remove('collapsed');
+        showUpgradesBtn.setAttribute('aria-expanded','true');
+    }
+
+    // Do NOT collapse when clicking an upgrade; only toggle via the showUpgrades button
+    showUpgradesBtn.addEventListener('click', () => {
+        if (upgradesContainer.classList.contains('collapsed')) expandUpgrades(); else collapseUpgrades();
+    });
+
+    // Do not force upgrade visibility on resize; allow the Show Upgrades button to control state on all viewports
+})();
+
+// Register clicks anywhere on the page as a manual click on wide screens
+// (User requested: at width 1300 make clicking the screen register a click)
+function __screenClickToManual(e){
+    try {
+        if (window.innerWidth > 13000) return; // only active on narrow viewports
+        const t = e.target;
+        if (!t) return;
+        // ignore clicks that target interactive UI elements or panels
+        if (t.closest && (
+            t.closest('button') || t.closest('a') || t.closest('input') || t.closest('textarea') ||
+            t.closest('.upgrades') || t.closest('.ach-panel') || t.closest('.dev-panel') || t.closest('.modal') ||
+            t.closest('.stats-bar')
+        )) return;
+        // perform a manual click
+        handleManualClick();
+    } catch (err) { /* defensive: don't break page */ }
+}
+
+document.addEventListener('click', __screenClickToManual);

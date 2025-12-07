@@ -354,13 +354,6 @@ a {
     .stats-bar{max-width:60vw;font-size:.9rem}
 }
 
-/* Make collapse/transition behavior global so toggles behave the same on PC and mobile */
-.stats-bar{transition:transform .24s ease,opacity .22s ease,visibility .24s}
-.stats-bar.collapsed{transform:translateX(110%);opacity:0;visibility:hidden;pointer-events:none}
-
-.upgrades{transition:max-height .28s ease,opacity .2s,padding .18s;max-height:1200px}
-.upgrades.collapsed{max-height:0;opacity:0;padding:0 0.5rem;overflow:hidden;pointer-events:none}
-
 /* Enforce non-bold typography: make every text use 500 weight */
 /* This overrides specific bold rules (Dev panel, buttons, headings, etc.) */
 html, body, * , *::before, *::after {
