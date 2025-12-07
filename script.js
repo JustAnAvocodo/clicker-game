@@ -629,16 +629,17 @@ async function doLogin() {
     try {
         const res = await fetch('/.netlify/functions/auth-login', { method: 'POST', body: JSON.stringify({ username: user, password: pass }) });
         const data = await res.json();
-        // ... inside doLogin ...
 if(res.ok) {
     currentUser = data; 
+    
+    // START NEW LINE
+    localStorage.setItem('game_session', JSON.stringify(currentUser));
+    // END NEW LINE
+
     userInfoDisplay.innerText = `Player: ${data.username}`;
-    
-    // NEW: Swap the buttons
-    document.getElementById('btn-login-modal').classList.add('hide'); // Hide Login
-    document.getElementById('btn-logout').classList.remove('hide');   // Show Logout
-    
-    document.getElementById('modal-login').classList.add('hide'); // Close modal
+    document.getElementById('btn-login-modal').classList.add('hide'); 
+    document.getElementById('btn-logout').classList.remove('hide');   
+    document.getElementById('modal-login').classList.add('hide');
     alert(`Welcome back, ${data.username}!`);
 }
 // ... else { authMsg.innerText = "Error: " + (data.error || "Failed"); }
@@ -766,15 +767,34 @@ document.addEventListener('click', __screenClickToManual);
 
 // --- LOGOUT FUNCTION ---
 document.getElementById('btn-logout').addEventListener('click', () => {
-    // 1. Clear the user variable
     currentUser = null;
+    
+    // START NEW LINE
+    localStorage.removeItem('game_session');
+    // END NEW LINE
 
-    // 2. Reset the text
     userInfoDisplay.innerText = "Not logged in";
-
-    // 3. Swap the buttons back
-    document.getElementById('btn-login-modal').classList.remove('hide'); // Show Login
-    document.getElementById('btn-logout').classList.add('hide');         // Hide Logout
-
+    document.getElementById('btn-login-modal').classList.remove('hide');
+    document.getElementById('btn-logout').classList.add('hide');
     alert("You have logged out.");
 });
+
+// --- RESTORE SESSION ON LOAD ---
+function restoreSession() {
+    const savedSession = localStorage.getItem('game_session');
+    
+    if (savedSession) {
+        // We found a saved user!
+        currentUser = JSON.parse(savedSession);
+        
+        // Update the UI immediately
+        userInfoDisplay.innerText = `Player: ${currentUser.username}`;
+        document.getElementById('btn-login-modal').classList.add('hide');
+        document.getElementById('btn-logout').classList.remove('hide');
+        
+        console.log("Session restored for:", currentUser.username);
+    }
+}
+
+// Call this function immediately
+restoreSession();
