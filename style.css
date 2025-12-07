@@ -241,3 +241,16 @@ h1 {
 .ach-popup-inner h2 { margin-bottom: 0.4rem; }
 .ach-popup-actions { display:flex; gap:0.5rem; justify-content:center; margin-top:0.8rem; }
 .ach-popup button { padding: 0.4rem 0.6rem; border-radius:6px; cursor:pointer; }
+
+/* Top Bar & Modals */
+.top-bar { position: fixed; top: 1rem; left: 1rem; display: flex; gap: 10px; align-items: center; z-index: 5000; }
+#user-info { font-weight: bold; color: #333; font-family: 'Fredoka', sans-serif; }
+.modal { position: fixed; z-index: 6000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; }
+.modal.hide { display: none; }
+.modal-content { background-color: #fefefe; padding: 20px; border-radius: 10px; width: 300px; text-align: center; position: relative; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+.close-modal { position: absolute; top: 5px; right: 15px; font-size: 28px; cursor: pointer; }
+.modal input { width: 100%; padding: 8px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; }
+.modal-actions { display: flex; justify-content: center; gap: 10px; }
+#leaderboard-list { list-style: none; padding: 0; margin: 15px 0; max-height: 300px; overflow-y: auto; }
+#leaderboard-list li { background: #eee; margin: 5px 0; padding: 8px; border-radius: 4px; display: grid; grid-template-columns: 40px 1fr auto; align-items: center; text-align: left; }
+#leaderboard-list li .player-score { font-family: monospace; color: #6b5cff; font-weight: bold; }
