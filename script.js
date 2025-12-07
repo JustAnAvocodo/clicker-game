@@ -629,13 +629,19 @@ async function doLogin() {
     try {
         const res = await fetch('/.netlify/functions/auth-login', { method: 'POST', body: JSON.stringify({ username: user, password: pass }) });
         const data = await res.json();
-        if(res.ok) {
-            currentUser = data; 
-            localStorage.setItem('clicker_user_session', JSON.stringify(currentUser));
-            updateLoginUI();
-            modalLogin.classList.add('hide');
-            alert(`Welcome back, ${data.username}!`);
-        } else { authMsg.innerText = "Error: " + (data.error || "Failed"); }
+        // ... inside doLogin ...
+if(res.ok) {
+    currentUser = data; 
+    userInfoDisplay.innerText = `Player: ${data.username}`;
+    
+    // NEW: Swap the buttons
+    document.getElementById('btn-login-modal').classList.add('hide'); // Hide Login
+    document.getElementById('btn-logout').classList.remove('hide');   // Show Logout
+    
+    document.getElementById('modal-login').classList.add('hide'); // Close modal
+    alert(`Welcome back, ${data.username}!`);
+}
+// ... else { authMsg.innerText = "Error: " + (data.error || "Failed"); }
     } catch(e) { authMsg.innerText = "Network Error"; }
 }
 
@@ -757,3 +763,18 @@ function __screenClickToManual(e){
 }
 
 document.addEventListener('click', __screenClickToManual);
+
+// --- LOGOUT FUNCTION ---
+document.getElementById('btn-logout').addEventListener('click', () => {
+    // 1. Clear the user variable
+    currentUser = null;
+
+    // 2. Reset the text
+    userInfoDisplay.innerText = "Not logged in";
+
+    // 3. Swap the buttons back
+    document.getElementById('btn-login-modal').classList.remove('hide'); // Show Login
+    document.getElementById('btn-logout').classList.add('hide');         // Hide Logout
+
+    alert("You have logged out.");
+});
