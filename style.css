@@ -386,3 +386,7 @@ html, body, * , *::before, *::after {
 #cloud-controls button {
     display: inline-block !important;
 }
+
+html, body {
+    overflow: hidden;
+}
