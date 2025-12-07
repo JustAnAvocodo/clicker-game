@@ -90,7 +90,11 @@ button#reset:hover {
 h1 {
     text-align: center;
     font-size: 5rem;
-    margin-top: 9rem;
+    margin-top: 15rem;
+}
+
+.upgrades {
+    margin-bottom: 5rem;
 }
 
 .one {
@@ -138,9 +142,10 @@ h1 {
 
 /* Stats bar (top-left) */
 .stats-bar {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
+    position: relative;
+    margin-top: 5rem;
+    top: 0rem;
+    right: 0rem;
     left: auto;
     background: rgba(255,255,255,0.95);
     color: #222;
